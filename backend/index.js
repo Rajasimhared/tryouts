@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const connectDB = require("./config/db");
 
 const app = express();
 app.use(cors());
 dotenv.config();
+connectDB();
 
 const PORT = process.env.PORT || 4000;
 
@@ -13,7 +15,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/chats", (req, res) => {
-  res.send({ test: "app" });
+  res.send({
+    test: "app"
+  });
 });
 
 app.listen(PORT, console.log("server listening on port 4000"));

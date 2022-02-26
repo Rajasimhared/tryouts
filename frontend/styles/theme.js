@@ -12,7 +12,20 @@ let theme = createTheme({
     palette: {
         primary: deepPurple,
         secondary: amber,
+        background: {
+            default: 'rgb(0, 30, 60)'
+        }
     },
+    typography: {
+        fontFamily: [
+            'Work Sans',
+            'sans-serif'
+        ].join(','),
+        button: {
+            textTransform: 'none'
+        }
+    },
+
 });
 
 theme = responsiveFontSizes(theme);
