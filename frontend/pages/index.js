@@ -1,8 +1,8 @@
 import { Box, Tabs, Tab, Typography } from "@mui/material";
 import Container from "@mui/material/Container";
 import { useState } from "react";
-import Login from "./components/Authentication/Login";
-import Signup from "./components/Authentication/Signup";
+import Login from "../components/Authentication/Login";
+import Signup from "../components/Authentication/Signup";
 
 const Homepage = () => {
   const [tabValue, setTabValue] = useState(0);

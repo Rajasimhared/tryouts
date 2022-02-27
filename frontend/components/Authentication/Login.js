@@ -1,11 +1,29 @@
 import React, { useState } from "react";
 import { Stack, Divider, TextField, Button } from "@mui/material";
+import Router from "next/router";
 
 const Login = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!email || !password) {
+      return;
+    }
+    try {
+      const data = await fetch("http://localhost:4000/api/user/login", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }).then((res) => res.json());
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      Router.push("/chats");
+    } catch (error) {}
     console.log("submitted");
   };
 
@@ -25,7 +43,7 @@ const Login = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required={true}
-        />
+        />{" "}
         <TextField
           name="password"
           label="Password"
@@ -35,10 +53,10 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required={true}
-        />
+        />{" "}
         <Button variant="contained" onClick={() => handleSubmit()}>
-          Login
-        </Button>
+          Login{" "}
+        </Button>{" "}
         <Button
           variant="contained"
           onClick={() => {
@@ -47,9 +65,9 @@ const Login = () => {
           }}
           color="secondary"
         >
-          Get Guest User Credentials
-        </Button>
-      </Stack>
+          Get Guest User Credentials{" "}
+        </Button>{" "}
+      </Stack>{" "}
     </div>
   );
 };
