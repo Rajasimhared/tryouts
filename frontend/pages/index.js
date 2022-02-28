@@ -20,7 +20,7 @@ const Homepage = () => {
         m="40px 0 15px 0"
         fontSize="3rem"
         borderRadius="10px"
-        backgroundColor="#FFFFFF"
+        backgroundColor="background.primary"
       >
         <Typography variant="h3">Tryouts</Typography>
       </Box>
@@ -28,10 +28,10 @@ const Homepage = () => {
         display="flex"
         justifyContent="center"
         p={3}
-        m="40px 0 15px 0"
+        m="10px 0 15px 0"
         fontSize="3rem"
         borderRadius="10px"
-        backgroundColor="#FFFFFF"
+        backgroundColor="background.primary"
       >
         <Box sx={{ borderBottom: 1, borderColor: "divider", width: 1 }}>
           <Tabs

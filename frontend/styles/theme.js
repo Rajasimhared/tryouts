@@ -13,7 +13,11 @@ let theme = createTheme({
         primary: deepPurple,
         secondary: amber,
         background: {
-            default: 'rgb(0, 30, 60)'
+            default: 'rgb(0, 30, 60)',
+            primary: "#FFF"
+        },
+        text: {
+            primary: "#000"
         }
     },
     typography: {
