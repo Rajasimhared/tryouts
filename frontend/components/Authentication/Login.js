@@ -24,7 +24,6 @@ const Login = () => {
       localStorage.setItem("userInfo", JSON.stringify(data));
       Router.push("/chats");
     } catch (error) {}
-    console.log("submitted");
   };
 
   return (
