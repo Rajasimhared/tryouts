@@ -14,7 +14,8 @@ let theme = createTheme({
         secondary: amber,
         background: {
             default: 'rgb(0, 30, 60)',
-            primary: "#FFF"
+            primary: "#FFF",
+            paper: "#e5e7e8"
         },
         text: {
             primary: "#000"

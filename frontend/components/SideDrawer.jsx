@@ -9,19 +9,17 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import { useTheme } from "@mui/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Avatar from "@mui/material/Avatar";
 import { ChatState } from "../Context/ChatProvider";
-import ProfileModal from "./ProfileModal";
 import Dialog from "../components/common/Dialog";
 import Router from "next/router";
-// import Drawer from "../components/common/Drawer";
+import ChatLoader from "../components/common/ChatLoader";
+import UserListItem from "./User/UserListItem";
 
 const SideDrawer = () => {
-  const theme = useTheme();
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,6 +28,7 @@ const SideDrawer = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openDropdown = Boolean(anchorEl);
+  const { user, setSelectedChat, chats, setChats } = ChatState();
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
@@ -49,14 +48,33 @@ const SideDrawer = () => {
         }
       ).then((res) => res.json());
       setLoading(false);
-      console.log(data);
       setSearchResult(data);
     } catch (error) {}
   };
 
-  const { user } = ChatState();
+  const accessChat = async (id) => {
+    try {
+      setLoadingChat(true);
 
-  console.log(user, openDrawer);
+      const data = await fetch(`http://localhost:4000/api/chat`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ userId: id }),
+      }).then((res) => res.json());
+
+      if (!chats.find((chat) => chat._id === data._id))
+        setChats([data, ...chats]);
+      setLoadingChat(false);
+      setSelectedChat(data);
+      setOpenDrawer(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Box
@@ -134,6 +152,7 @@ const SideDrawer = () => {
             width: { xs: "100%", md: "20%" },
             height: "100%",
             p: 3,
+            backgroundColor: "background.primary",
           },
         }}
       >
@@ -146,7 +165,7 @@ const SideDrawer = () => {
         >
           Search Users
         </Typography>
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", mb: 2 }}>
           <TextField
             fullWidth
             id="fullWidth"
@@ -161,8 +180,17 @@ const SideDrawer = () => {
             Go
           </Button>
         </Box>
-
-        {searchResult[0]?.email}
+        {loading ? (
+          <ChatLoader />
+        ) : (
+          searchResult?.map((chat) => (
+            <UserListItem
+              key={chat._id}
+              user={chat}
+              handleSelect={() => accessChat(chat._id)}
+            />
+          ))
+        )}
       </Drawer>
     </>
   );

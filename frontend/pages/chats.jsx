@@ -17,6 +17,7 @@ const Chats = () => {
           justifyContent: "space-between",
           width: "100%",
           p: "10px",
+          height: "91vh",
         }}
       >
         {user && <MyChats />}
