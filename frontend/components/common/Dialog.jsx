@@ -1,5 +1,5 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
 import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -49,7 +49,7 @@ export default function CustomDialog({ user, children }) {
     setOpen(true);
   };
   const handleClose = () => {
-    children.props.close();
+    children.props.close && children.props.close();
     setOpen(false);
   };
 
@@ -65,6 +65,7 @@ export default function CustomDialog({ user, children }) {
             width: { xs: "100%", md: "40%" },
             height: "40%",
             textAlign: "center",
+            backgroundColor: "background.primary",
           },
         }}
       >
@@ -72,22 +73,30 @@ export default function CustomDialog({ user, children }) {
           id="customized-dialog-title"
           onClose={handleClose}
         ></BootstrapDialogTitle>
-        <DialogContent>
+        <DialogContent
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+        >
           <Typography
             sx={{
               fontSize: "3rem",
-              pb: 4,
+              pb: 3,
               fontWeight: "bold",
             }}
           >
             {user.name}
           </Typography>
-          <Image
-            src={user.pic}
+          <Avatar
+            src={user.pic || ""}
             alt="Profile picture"
-            width={150}
-            height={150}
-            className="profile-pic"
+            sx={{
+              width: "150px",
+              height: "150px",
+            }}
           />
           <Typography
             sx={{

@@ -31,7 +31,7 @@ const Signup = () => {
       return;
     }
     try {
-      const { data } = await fetch("http://localhost:4000/api/user", {
+      const data = await fetch("http://localhost:4000/api/user", {
         headers: {
           "Content-Type": "application/json",
         },

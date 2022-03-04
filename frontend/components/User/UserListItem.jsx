@@ -6,6 +6,7 @@ function UserListItem({ user, handleSelect }) {
     <Box
       sx={{
         display: "flex",
+        width: "100%",
         alignItems: "center",
         cursor: "pointer",
         p: 2,

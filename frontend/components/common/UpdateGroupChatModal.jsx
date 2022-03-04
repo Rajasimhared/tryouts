@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Stack, TextField, CircularProgress, Chip, Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -44,10 +44,14 @@ const BootstrapDialogTitle = (props) => {
   );
 };
 
-export default function GroupChatModal({ children }) {
+export default function UpdateGroupChatModal({
+  selectedChat,
+  fetchChats,
+  children,
+}) {
   const [open, setOpen] = useState(false);
 
-  const [groupChatName, setGroupChatName] = useState();
+  const [groupChatName, setGroupChatName] = useState(selectedChat.chatName);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -61,31 +65,52 @@ export default function GroupChatModal({ children }) {
     setOpen(false);
   };
 
-  const handleSubmit = async () => {
+  const handleGroupNameUpdate = async () => {
     try {
-      const data = await fetch(`http://localhost:4000/api/chat/group`, {
+      const data = await fetch(`http://localhost:4000/api/chat/rename`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
           "Content-Type": "application/json",
         },
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify({
-          name: groupChatName,
-          users: JSON.stringify(selectedUsers.map((user) => user._id)),
+          chatName: groupChatName,
+          chatId: selectedChat._id,
         }),
       }).then((res) => res.json());
-
-      if (!chats.find((chat) => chat._id === data._id))
-        setChats([data, ...chats]);
+      fetchChats();
       handleClose();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
-  const handleSelect = (user) => {
-    if (!selectedUsers.includes(user)) {
-      setSelectedUsers([...selectedUsers, user]);
+  useEffect(() => {
+    setSelectedUsers(selectedChat.users);
+  }, [selectedChat]);
+
+  const handleSelect = async (selectedUser) => {
+    if (
+      !selectedUsers.find((user) => user._id === selectedUser._id) &&
+      selectedChat.groupAdmin._id === user._id
+    ) {
+      setSelectedUsers([...selectedUsers, selectedUser]);
+      try {
+        const data = await fetch(`http://localhost:4000/api/chat/groupadd`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+          body: JSON.stringify({
+            userId: selectedUser._id,
+            chatId: selectedChat._id,
+          }),
+        }).then((res) => res.json());
+        fetchChats();
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -102,16 +127,54 @@ export default function GroupChatModal({ children }) {
             },
           }
         ).then((res) => res.json());
-        console.log(data);
         setLoading(false);
         setSearchResult(data);
       } catch (error) {}
     }
   };
 
-  const handleDelete = (val) => {
-    setSelectedUsers(selectedUsers.filter((user) => user._id !== val));
+  const handleDelete = async (val) => {
+    if (selectedChat.groupAdmin._id === user._id) {
+      setSelectedUsers(selectedUsers.filter((user) => user._id !== val));
+      try {
+        const data = await fetch(`http://localhost:4000/api/chat/groupremove`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "application/json",
+          },
+          method: "PUT",
+          body: JSON.stringify({
+            userId: val,
+            chatId: selectedChat._id,
+          }),
+        }).then((res) => res.json());
+        fetchChats();
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
+
+  const handleLeave = async () => {
+    try {
+      const data = await fetch(`http://localhost:4000/api/chat/groupremove`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: JSON.stringify({
+          userId: user._id,
+          chatId: selectedChat._id,
+        }),
+      }).then((res) => res.json());
+      fetchChats();
+      handleClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       {children && <span onClick={handleClickOpen}>{children}</span>}
@@ -122,7 +185,6 @@ export default function GroupChatModal({ children }) {
         PaperProps={{
           sx: {
             width: { xs: "100%", md: "40%" },
-            height: "35%",
             textAlign: "center",
             backgroundColor: "background.primary",
           },
@@ -134,7 +196,7 @@ export default function GroupChatModal({ children }) {
         ></BootstrapDialogTitle>
         <DialogContent sx={{ p: 3 }}>
           <Typography variant="h3" sx={{ mb: 3 }}>
-            Create Group Chat
+            {selectedChat.chatName}
           </Typography>
           <Stack
             direction="column"
@@ -144,29 +206,45 @@ export default function GroupChatModal({ children }) {
               alignItems: "center",
             }}
           >
-            <TextField
-              fullWidth
-              placeholder="Chat Name"
-              value={groupChatName}
-              onChange={(e) => setGroupChatName(e.target.value)}
-            ></TextField>
+            <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap" }}>
+              {selectedUsers
+                ?.filter((users) => users._id !== user._id)
+                .map((user) => (
+                  <Chip
+                    label={user.name.toUpperCase()}
+                    onDelete={() => handleDelete(user._id)}
+                    key={user._id}
+                    color="primary"
+                    sx={{ mx: 0.5 }}
+                  />
+                ))}
+            </Box>
+            <Box sx={{ display: "flex", width: "100%" }}>
+              <TextField
+                fullWidth
+                placeholder="Chat Name"
+                value={groupChatName}
+                onChange={(e) => setGroupChatName(e.target.value)}
+              ></TextField>
+              <Button
+                variant="contained"
+                sx={{
+                  width: "30%",
+                  ml: 1,
+                }}
+                onClick={() => handleGroupNameUpdate()}
+                disabled={!groupChatName}
+              >
+                Update
+              </Button>
+            </Box>
             <TextField
               fullWidth
               placeholder="Add Users Ex: John Doe"
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
             ></TextField>
-            <Box sx={{ display: "flex", width: "100%", flexWrap: "wrap" }}>
-              {selectedUsers?.map((user) => (
-                <Chip
-                  label={user.name.toUpperCase()}
-                  onDelete={() => handleDelete(user._id)}
-                  key={user._id}
-                  color="primary"
-                  sx={{ mx: 0.5 }}
-                />
-              ))}
-            </Box>
+
             {loading ? (
               <CircularProgress color="primary" />
             ) : (
@@ -183,6 +261,7 @@ export default function GroupChatModal({ children }) {
           </Stack>
           <Button
             variant="contained"
+            color="error"
             sx={{
               width: "30%",
               mt: 3,
@@ -190,10 +269,9 @@ export default function GroupChatModal({ children }) {
               marginRight: 0,
               display: "block",
             }}
-            onClick={() => handleSubmit()}
-            disabled={!groupChatName || selectedUsers.length < 2}
+            onClick={() => handleLeave()}
           >
-            Create Chat
+            Leave Group
           </Button>
         </DialogContent>
       </BootstrapDialog>

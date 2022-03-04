@@ -2,43 +2,31 @@ import React, { useEffect } from "react";
 import { ChatState } from "../Context/ChatProvider";
 import { Box, Button, Typography, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { getSender } from "./utils/chatsUtil";
+import { getSenderName } from "./utils/chatsUtil";
 import GroupChatModal from "./common/GroupChatModal";
 
 const MyChats = () => {
-  const { user, selectedChat, chats, setSelectedChat, setChats } = ChatState();
-  const fetchChats = async () => {
-    try {
-      const data = await fetch(`http://localhost:4000/api/chat`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      }).then((res) => res.json());
-      console.log(data);
-      setChats(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    fetchChats();
-  }, []);
+  const { user, selectedChat, chats, setSelectedChat } = ChatState();
 
   return (
     <Box
       sx={{
-        display: { xs: "none", md: "flex" },
+        display: selectedChat
+          ? { xs: "none", md: "flex" }
+          : { xs: "flex", md: "flex" },
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "background.primary",
-        width: { xs: "100%", md: "30%" },
+        width: selectedChat
+          ? { xs: "100%", md: "30%" }
+          : { xs: "100%", md: "30%" },
         borderRadius: "6px",
         p: 3,
       }}
     >
       <Box
         sx={{
-          display: { xs: "none", md: "flex" },
+          display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           width: "100%",
@@ -52,14 +40,7 @@ const MyChats = () => {
           </Button>
         </GroupChatModal>
       </Box>
-      {/* <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-        }}
-      > */}
+
       <Stack
         direction="column"
         spacing={1}
@@ -72,11 +53,11 @@ const MyChats = () => {
             key={chat._id}
             sx={{
               backgroundColor:
-                selectedChat == chat
+                selectedChat._id == chat._id
                   ? "background.default"
                   : "background.paper",
               color:
-                selectedChat == chat
+                selectedChat._id == chat._id
                   ? "background.paper"
                   : "background.default",
               cursor: "pointer",
@@ -86,12 +67,13 @@ const MyChats = () => {
             onClick={() => setSelectedChat(chat)}
           >
             <Typography variant="h6">
-              {chat.isGroupChat ? chat.chatName : getSender(user, chat.users)}
+              {chat.isGroupChat
+                ? chat.chatName
+                : getSenderName(user, chat.users)}
             </Typography>
           </Box>
         ))}
       </Stack>
-      {/* </Box> */}
     </Box>
   );
 };
