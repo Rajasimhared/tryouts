@@ -15,11 +15,15 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Avatar from "@mui/material/Avatar";
 import { ChatState } from "../Context/ChatProvider";
 import Dialog from "../components/common/Dialog";
-import Router from "next/router";
+// import Router from "next/router";
+import { useRouter } from "next/router";
+
 import ChatLoader from "../components/common/ChatLoader";
 import UserListItem from "./User/UserListItem";
 
 const SideDrawer = () => {
+  const router = useRouter();
+
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -32,7 +36,7 @@ const SideDrawer = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
-    Router.push("/");
+    router.push("/");
   };
 
   const handleSearch = async () => {

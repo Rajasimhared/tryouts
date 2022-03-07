@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import { Stack, Divider, TextField, Button } from "@mui/material";
-import Router from "next/router";
+import { useRouter } from "next/router";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async () => {
     if (!email || !password) {
       return;
     }
     try {
-      const data = await fetch("http://localhost:4000/api/user/login", {
+      const res = await fetch("http://localhost:4000/api/user/login", {
         headers: {
           "Content-Type": "application/json",
         },
@@ -20,9 +21,12 @@ const Login = () => {
           email,
           password,
         }),
-      }).then((res) => res.json());
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      Router.push("/chats");
+      });
+      if (res.status === 200) {
+        const data = await res.json();
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        router.push("/chats");
+      }
     } catch (error) {}
   };
 

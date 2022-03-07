@@ -7,7 +7,7 @@ import { ChatState } from "../Context/ChatProvider";
 
 const Chats = () => {
   const { user, setChats, selectedChat } = ChatState();
-
+  console.log("tets", user);
   const fetchChats = async () => {
     try {
       const data = await fetch(`http://localhost:4000/api/chat`, {
@@ -28,7 +28,8 @@ const Chats = () => {
 
   return (
     <div>
-      {user && <SideDrawer />}
+      {" "}
+      {user && <SideDrawer />}{" "}
       <Box
         sx={{
           display: "flex",
@@ -38,9 +39,9 @@ const Chats = () => {
           height: "91vh",
         }}
       >
-        {user && <MyChats />}
-        {user && <ChatBox fetchChats={fetchChats} />}
-      </Box>
+        {" "}
+        {user && <MyChats />} {user && <ChatBox fetchChats={fetchChats} />}{" "}
+      </Box>{" "}
     </div>
   );
 };
