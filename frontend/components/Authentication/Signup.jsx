@@ -44,11 +44,9 @@ const Signup = () => {
         }),
       }).then((res) => res.json());
 
-      console.log(data);
       localStorage.setItem("userInfo", JSON.stringify(data));
       Router.push("/chats");
     } catch (error) {}
-    console.log("submitted");
   };
 
   const postDetails = (val) => {
@@ -70,17 +68,6 @@ const Signup = () => {
       });
     console.log(val);
     setPic(val);
-  };
-
-  const toast = ({ title, status } = obj) => {
-    console.log(title, status);
-    return (
-      <Collapse in={open}>
-        <Alert severity={status} variant="filled">
-          {title}
-        </Alert>
-      </Collapse>
-    );
   };
 
   return (

@@ -17,9 +17,7 @@ const MyChats = () => {
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "background.primary",
-        width: selectedChat
-          ? { xs: "100%", md: "30%" }
-          : { xs: "100%", md: "30%" },
+        width: { xs: "100%", md: "30%" },
         borderRadius: "6px",
         p: 3,
       }}

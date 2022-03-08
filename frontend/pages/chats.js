@@ -7,7 +7,6 @@ import { ChatState } from "../Context/ChatProvider";
 
 const Chats = () => {
   const { user, setChats, selectedChat } = ChatState();
-  console.log("tets", user);
   const fetchChats = async () => {
     try {
       const data = await fetch(`http://localhost:4000/api/chat`, {
@@ -16,7 +15,6 @@ const Chats = () => {
         },
       }).then((res) => res.json());
       setChats(data);
-      console.log(selectedChat);
     } catch (error) {
       console.error(error);
     }

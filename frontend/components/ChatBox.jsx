@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { ChatState } from "../Context/ChatProvider";
 import {
   Box,
@@ -21,7 +21,6 @@ var socket, selectedChatCompare;
 
 const ChatBox = ({ fetchChats }) => {
   const { user, selectedChat, chats, setSelectedChat, setChats } = ChatState();
-  const messageEnd = useRef(null);
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState();
@@ -68,7 +67,6 @@ const ChatBox = ({ fetchChats }) => {
 
   useEffect(() => {
     socket.on("message received", (newMessageReceived) => {
-      console.log(selectedChatCompare);
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessageReceived.chat._id
@@ -78,13 +76,6 @@ const ChatBox = ({ fetchChats }) => {
         setMessages([...messages, newMessageReceived]);
       }
     });
-    // messageEnd.current.scrollIntoView &&
-    //   messageEnd.current.scrollIntoView({ behavior: "smooth" });
-    if (messageEnd.current) {
-      messageEnd.current.scrollTop =
-        messageEnd.current.hasOwnProperty("scrollHeight") &&
-        messageEnd.current.scrollHeight;
-    }
   });
 
   const sendMessage = async (e) => {

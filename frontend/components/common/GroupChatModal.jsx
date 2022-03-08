@@ -102,7 +102,6 @@ export default function GroupChatModal({ children }) {
             },
           }
         ).then((res) => res.json());
-        console.log(data);
         setLoading(false);
         setSearchResult(data);
       } catch (error) {}
