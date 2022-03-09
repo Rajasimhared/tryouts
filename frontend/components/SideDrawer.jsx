@@ -32,7 +32,14 @@ const SideDrawer = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openDropdown = Boolean(anchorEl);
-  const { user, setSelectedChat, chats, setChats } = ChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notifications,
+    setNotifications,
+  } = ChatState();
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
