@@ -17,7 +17,7 @@ import { ChatState } from "../Context/ChatProvider";
 import Dialog from "../components/common/Dialog";
 // import Router from "next/router";
 import { useRouter } from "next/router";
-
+import { BACKEND_END_POINT } from "./utils/endpoints";
 import ChatLoader from "../components/common/ChatLoader";
 import UserListItem from "./User/UserListItem";
 
@@ -51,7 +51,7 @@ const SideDrawer = () => {
       setLoading(true);
 
       const data = await fetch(
-        `http://localhost:4000/api/user?search=${search}`,
+        `${BACKEND_END_POINT}/api/user?search=${search}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -67,7 +67,7 @@ const SideDrawer = () => {
     try {
       setLoadingChat(true);
 
-      const data = await fetch(`http://localhost:4000/api/chat`, {
+      const data = await fetch(`${BACKEND_END_POINT}/api/chat`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
           "Content-Type": "application/json",

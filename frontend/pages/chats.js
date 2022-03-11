@@ -4,12 +4,13 @@ import ChatBox from "../components/ChatBox";
 import MyChats from "../components/MyChats";
 import SideDrawer from "../components/SideDrawer";
 import { ChatState } from "../Context/ChatProvider";
+import { BACKEND_END_POINT } from "../components/utils/endpoints";
 
 const Chats = () => {
   const { user, setChats, selectedChat } = ChatState();
   const fetchChats = async () => {
     try {
-      const data = await fetch(`http://localhost:4000/api/chat`, {
+      const data = await fetch(`${BACKEND_END_POINT}/api/chat`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

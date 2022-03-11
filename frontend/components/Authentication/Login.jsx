@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Stack, Divider, TextField, Button } from "@mui/material";
+import { BACKEND_END_POINT } from "../utils/endpoints";
 import { useRouter } from "next/router";
 
 const Login = () => {
@@ -12,7 +13,7 @@ const Login = () => {
       return;
     }
     try {
-      const res = await fetch("http://localhost:4000/api/user/login", {
+      const res = await fetch(`${BACKEND_END_POINT}/api/user/login`, {
         headers: {
           "Content-Type": "application/json",
         },

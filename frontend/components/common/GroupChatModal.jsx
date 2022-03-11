@@ -10,6 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { ChatState } from "../../Context/ChatProvider";
 import UserListItem from "../User/UserListItem";
+import { BACKEND_END_POINT } from "../utils/endpoints";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -63,7 +64,7 @@ export default function GroupChatModal({ children }) {
 
   const handleSubmit = async () => {
     try {
-      const data = await fetch(`http://localhost:4000/api/chat/group`, {
+      const data = await fetch(`${BACKEND_END_POINT}/api/chat/group`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
           "Content-Type": "application/json",
@@ -95,7 +96,7 @@ export default function GroupChatModal({ children }) {
       try {
         setLoading(true);
         const data = await fetch(
-          `http://localhost:4000/api/user?search=${search}`,
+          `${BACKEND_END_POINT}/api/user?search=${search}`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,

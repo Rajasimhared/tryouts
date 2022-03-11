@@ -16,8 +16,9 @@ import io from "socket.io-client";
 import Lottie from "lottie-react";
 import ScrollableFeed from "react-scrollable-feed";
 import animationData from "./utils/typing.json";
+import { BACKEND_END_POINT } from "./utils/endpoints";
 
-const ENDPOINT = "http://localhost:4000";
+const ENDPOINT = BACKEND_END_POINT;
 
 var socket, selectedChatCompare;
 
@@ -52,7 +53,7 @@ const ChatBox = ({ fetchChats }) => {
     setNewMessage("");
     try {
       const data = await fetch(
-        `http://localhost:4000/api/message/${selectedChat._id}`,
+        `${BACKEND_END_POINT}/api/message/${selectedChat._id}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -106,7 +107,7 @@ const ChatBox = ({ fetchChats }) => {
       socket.emit("stop typing", selectedChat._id);
       setLoading(true);
       try {
-        const data = await fetch(`http://localhost:4000/api/message`, {
+        const data = await fetch(`${BACKEND_END_POINT}/api/message`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
             "Content-Type": "application/json",

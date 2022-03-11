@@ -8,6 +8,7 @@ import {
   Collapse,
 } from "@mui/material";
 import Router from "next/router";
+import { BACKEND_END_POINT } from "../utils/endpoints";
 
 const Signup = () => {
   const [name, setName] = useState();
@@ -31,7 +32,7 @@ const Signup = () => {
       return;
     }
     try {
-      const data = await fetch("http://localhost:4000/api/user", {
+      const data = await fetch(`${BACKEND_END_POINT}/api/user`, {
         headers: {
           "Content-Type": "application/json",
         },

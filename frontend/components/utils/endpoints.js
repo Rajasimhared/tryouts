@@ -1,0 +1,1 @@
+export const BACKEND_END_POINT = 'https://tryoutsapp.herokuapp.com/'

@@ -10,6 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import { ChatState } from "../../Context/ChatProvider";
 import UserListItem from "../User/UserListItem";
+import { BACKEND_END_POINT } from "../utils/endpoints";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -67,7 +68,7 @@ export default function UpdateGroupChatModal({
 
   const handleGroupNameUpdate = async () => {
     try {
-      const data = await fetch(`http://localhost:4000/api/chat/rename`, {
+      const data = await fetch(`${BACKEND_END_POINT}/api/chat/rename`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
           "Content-Type": "application/json",
@@ -96,7 +97,7 @@ export default function UpdateGroupChatModal({
     ) {
       setSelectedUsers([...selectedUsers, selectedUser]);
       try {
-        const data = await fetch(`http://localhost:4000/api/chat/groupadd`, {
+        const data = await fetch(`${BACKEND_END_POINT}/api/chat/groupadd`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
             "Content-Type": "application/json",
@@ -120,7 +121,7 @@ export default function UpdateGroupChatModal({
       try {
         setLoading(true);
         const data = await fetch(
-          `http://localhost:4000/api/user?search=${search}`,
+          `${BACKEND_END_POINT}/api/user?search=${search}`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
@@ -137,7 +138,7 @@ export default function UpdateGroupChatModal({
     if (selectedChat.groupAdmin._id === user._id) {
       setSelectedUsers(selectedUsers.filter((user) => user._id !== val));
       try {
-        const data = await fetch(`http://localhost:4000/api/chat/groupremove`, {
+        const data = await fetch(`${BACKEND_END_POINT}/api/chat/groupremove`, {
           headers: {
             Authorization: `Bearer ${user.token}`,
             "Content-Type": "application/json",
@@ -157,7 +158,7 @@ export default function UpdateGroupChatModal({
 
   const handleLeave = async () => {
     try {
-      const data = await fetch(`http://localhost:4000/api/chat/groupremove`, {
+      const data = await fetch(`${BACKEND_END_POINT}/api/chat/groupremove`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
           "Content-Type": "application/json",
