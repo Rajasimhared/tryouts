@@ -20,7 +20,7 @@ export default function MyApp(props) {
       <Head>
         <title> MUI5 Nextjs </title>{" "}
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>{" "}
+      </Head>
       <ThemeProvider theme={theme}>
         <ChatProvider>
           <CssBaseline />

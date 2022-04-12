@@ -21,6 +21,7 @@ const ChatProvider = ({ children }) => {
     <ChatContext.Provider
       value={{
         user,
+        setUser,
         selectedChat,
         setSelectedChat,
         setChats,

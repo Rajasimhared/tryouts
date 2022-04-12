@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Stack, Divider, TextField, Button } from "@mui/material";
 import { BACKEND_END_POINT } from "../utils/endpoints";
 import { useRouter } from "next/router";
+import { ChatState } from "../../Context/ChatProvider";
 
 const Login = () => {
+  const { setUser } = ChatState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -26,6 +28,7 @@ const Login = () => {
       if (res.status === 200) {
         const data = await res.json();
         localStorage.setItem("userInfo", JSON.stringify(data));
+        setUser(data);
         router.push("/chats");
       }
     } catch (error) {}
