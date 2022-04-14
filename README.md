@@ -1,4 +1,4 @@
-# tryouts
+# Tryouts
 
 Tryouts is a chat application built using React, Next.js, Node.js, Express and Mongodb stack. It includes the following features
 
